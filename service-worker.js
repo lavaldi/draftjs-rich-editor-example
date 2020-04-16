@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/draftjs-rich-editor-example/precache-manifest.4ddb57e553141b7bb2a34034e735e74c.js"
+  "/draftjs-rich-editor-example/precache-manifest.1efe82aa956338fa1fa146f1c2c6f214.js"
 );
 
 self.addEventListener('message', (event) => {
