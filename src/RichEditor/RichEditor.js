@@ -4,8 +4,11 @@ import {
   EditorState,
   RichUtils,
   getDefaultKeyBinding,
-  KeyBindingUtil
-} from 'draft-js';
+  KeyBindingUtil,
+  ContentState,
+  convertFromHTML
+} from 'draft-js'
+import { stateToHTML } from 'draft-js-export-html'
 import Toolbar from './Toolbar'
 import Button from './Button'
 import Icon from './Icon'
@@ -18,8 +21,18 @@ const keyBindingFunction = event => {
   return getDefaultKeyBinding(event);
 }
 
-const RichEditor = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+const RichEditor = ({ initialValue }) => {
+  let state;
+  if (initialValue) {
+    const blocksFromHTML = convertFromHTML(initialValue);
+    state = ContentState.createFromBlockArray(
+      blocksFromHTML.contentBlocks,
+      blocksFromHTML.entityMap,
+    );
+  }
+  const [editorState, setEditorState] = useState(
+    state ? EditorState.createWithContent(state) : EditorState.createEmpty()
+  );
 
   const toggleFormat = (event, type) => {
     event.preventDefault();
@@ -65,6 +78,7 @@ const RichEditor = () => {
     );
   }
 
+  // to patch placeholder issue
   const contentState = editorState.getCurrentContent();
   let showPlaceholder = false;
   if (!contentState.hasText()) {
@@ -72,6 +86,9 @@ const RichEditor = () => {
       showPlaceholder = true;
     }
   }
+
+  // export HTML
+  console.log(stateToHTML(contentState));
 
   return (
     <div className={!showPlaceholder ? 'hide-placeholder' : ''}>
